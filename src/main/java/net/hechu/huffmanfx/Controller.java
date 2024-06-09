@@ -1,6 +1,5 @@
 package net.hechu.huffmanfx;
 
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import javafx.fxml.FXML;
@@ -34,11 +33,9 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        inputText.textProperty().addListener((observable, oldValue, newValue) -> {
-            inputChangedSubject.onNext(newValue);
-        });
+        inputText.textProperty().addListener((observable, oldValue, newValue) -> inputChangedSubject.onNext(newValue));
 
-        Disposable disposable = inputChangedSubject.debounce(1, TimeUnit.SECONDS)
+        inputChangedSubject.debounce(1, TimeUnit.SECONDS)
                 .observeOn(Schedulers.io())
                 .map(text -> {
                     if (text.isEmpty()) return OUTPUT_TIP;
